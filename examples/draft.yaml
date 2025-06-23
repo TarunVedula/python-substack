@@ -1,0 +1,52 @@
+title:
+  "How to publish a Substack post using the Python API"
+subtitle:
+  "This post was published using the Python API"
+audience:
+  "everyone" # everyone, only_paid, founding, only_free
+write_comment_permissions:
+  "none" # none, only_paid, everyone
+section:
+  "rick"
+body:
+  0:
+    type: "heading"
+    level: 1
+    content: "Steps"
+  1:
+    type: "paragraph"
+    content: "1)"
+    marks:
+      - type: "strong"
+      - type: "em"
+  2:
+    type: "paragraph"
+    content:
+      - content: "hello"
+        marks:
+          - type: "strong"
+          - type: "em"
+      - content: ", how are you?"
+  10:
+    type: "paragraph"
+    content: "my friend"
+  3:
+    type: "horizontal_rule"
+  4:
+    type: "paragraph"
+    content: "2)"
+  5:
+    type: "captionedImage"
+    src: "https://media.tenor.com/7B4jMa-a7bsAAAAC/i-am-batman.gif"
+  6:
+    type: "paragraph"
+    content: "Set the EMAIL, PASSWORD, PUBLICATION_URL and USER_ID environment variables."
+  7:
+    type: "captionedImage"
+    src: "rickroll_4k.jpg"
+  8:
+    type: "youtube2"
+    src: "EnDg65ISswg"
+  9:
+    type: "subscribeWidget"
+    message: "Hello Everyone!!!"
