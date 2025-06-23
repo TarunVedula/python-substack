@@ -34,6 +34,17 @@ poetry shell
 pip install python-substack
 ```
 
+### Development Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/TarunVedula/python-substack.git
+cd python-substack
+
+# Install in development mode
+pip install -e .
+```
+
 ## Quick Start
 
 ### 1. Set up Authentication
@@ -41,14 +52,15 @@ pip install python-substack
 Create a `.env` file in your project directory:
 
 ```env
-SUBSTACK_EMAIL=your-email@example.com
-SUBSTACK_PASSWORD=your-password
+EMAIL=your-email@example.com
+PASSWORD=your-password
+PUBLICATION_URL=https://your-publication.substack.com
 ```
 
 ### 2. Basic Usage
 
 ```python
-from substack import SubstackAPI
+from substack import Api
 import os
 from dotenv import load_dotenv
 
@@ -56,105 +68,125 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Initialize the API client
-api = SubstackAPI(
-    email=os.getenv("SUBSTACK_EMAIL"),
-    password=os.getenv("SUBSTACK_PASSWORD")
+api = Api(
+    email=os.getenv("EMAIL"),
+    password=os.getenv("PASSWORD"),
+    publication_url=os.getenv("PUBLICATION_URL")
 )
 
 # Get subscriber count
-subscriber_count = api.get_subscriber_count()
+subscriber_count = api.get_publication_subscriber_count()
 print(f"Current subscribers: {subscriber_count}")
 
-# Create a new post
-post_data = {
-    "title": "My First API Post",
-    "subtitle": "Created using python-substack",
-    "body": "This post was created programmatically using the python-substack library!",
-    "published": True
-}
-
-post = api.create_post(post_data)
-print(f"Post created: {post.title}")
+# Get published posts
+posts = api.get_published_posts(limit=5)
+for post in posts:
+    print(f"Post: {post['title']}")
 ```
 
 ## Examples
 
-### Publishing a Post
-
-```python
-from substack import SubstackAPI
-
-api = SubstackAPI(email="your-email@example.com", password="your-password")
-
-post_data = {
-    "title": "Hello World",
-    "subtitle": "A test post",
-    "body": "# Hello World\n\nThis is a test post created with python-substack.",
-    "published": True
-}
-
-post = api.create_post(post_data)
-print(f"Published: {post.url}")
-```
-
-### Creating a Draft
-
-```python
-post_data = {
-    "title": "Draft Post",
-    "subtitle": "This is a draft",
-    "body": "This post is saved as a draft.",
-    "published": False
-}
-
-draft = api.create_post(post_data)
-print(f"Draft created: {draft.id}")
-```
-
 ### Getting Subscriber Count
 
 ```python
-subscriber_count = api.get_subscriber_count()
+from substack import Api
+
+api = Api(
+    email="your-email@example.com", 
+    password="your-password",
+    publication_url="https://your-publication.substack.com"
+)
+
+subscriber_count = api.get_publication_subscriber_count()
 print(f"You have {subscriber_count} subscribers")
 ```
 
-### Uploading Images
+### Creating and Publishing a Draft
 
 ```python
-# Upload an image
-image_url = api.upload_image("path/to/image.jpg")
+from substack import Api
 
-# Use the image in a post
-post_data = {
-    "title": "Post with Image",
-    "body": f"Here's an image: ![Image]({image_url})",
-    "published": True
+api = Api(
+    email="your-email@example.com", 
+    password="your-password",
+    publication_url="https://your-publication.substack.com"
+)
+
+# Create a new draft
+draft_data = {
+    "title": "Hello World",
+    "subtitle": "A test post",
+    "body": "# Hello World\n\nThis is a test post created with python-substack.",
+    "section_id": None
 }
 
-post = api.create_post(post_data)
+draft = api.post_draft(draft_data)
+print(f"Draft created: {draft['id']}")
+
+# Publish the draft
+published_post = api.publish_draft(draft, send=True)
+print(f"Published: {published_post['url']}")
+```
+
+### Working with Drafts
+
+```python
+# Get all drafts
+drafts = api.get_drafts()
+
+# Get a specific draft
+draft = api.get_draft(draft_id)
+
+# Update a draft
+updated_draft = api.put_draft(draft, title="Updated Title")
+
+# Delete a draft
+api.delete_draft(draft_id)
+```
+
+### Scheduling Posts
+
+```python
+from datetime import datetime
+
+# Schedule a draft for later publication
+schedule_time = datetime(2024, 2, 1, 10, 0, 0)  # Feb 1, 2024 at 10 AM
+scheduled = api.schedule_draft(draft, schedule_time)
+
+# Unschedule a draft
+api.unschedule_draft(draft)
 ```
 
 ## API Reference
 
-### SubstackAPI Class
+### Api Class
 
 #### Methods
 
-- `create_post(post_data)`: Create a new post
-- `get_subscriber_count()`: Get current subscriber count
-- `upload_image(image_path)`: Upload an image
-- `schedule_post(post_data, publish_date)`: Schedule a post for later publication
+- `get_publication_subscriber_count()`: Get current subscriber count
+- `get_published_posts(offset=0, limit=25, order_by="post_date", order_direction="desc")`: Get published posts
+- `get_drafts(filter=None, offset=None, limit=None)`: Get all drafts
+- `get_draft(draft_id)`: Get a specific draft
+- `post_draft(body)`: Create a new draft
+- `put_draft(draft, **kwargs)`: Update a draft
+- `publish_draft(draft, send=True, share_automatically=False)`: Publish a draft
+- `schedule_draft(draft, draft_datetime)`: Schedule a draft for later publication
+- `unschedule_draft(draft)`: Unschedule a draft
+- `delete_draft(draft_id)`: Delete a draft
+- `get_user_profile()`: Get user profile information
+- `get_user_publications()`: Get all user publications
+- `get_user_primary_publication()`: Get the primary publication
 
-#### Post Data Structure
+#### Draft Data Structure
 
 ```python
-post_data = {
+draft_data = {
     "title": str,           # Required: Post title
     "subtitle": str,        # Optional: Post subtitle
     "body": str,           # Required: Post content (supports Markdown)
-    "published": bool,     # Required: Whether to publish immediately
+    "section_id": int,     # Optional: Section ID
     "tags": list,          # Optional: List of tags
-    "section": str         # Optional: Section name
+    "published": bool      # Optional: Whether to publish immediately
 }
 ```
 
@@ -162,12 +194,24 @@ post_data = {
 
 ### Environment Variables
 
-- `SUBSTACK_EMAIL`: Your Substack email address
-- `SUBSTACK_PASSWORD`: Your Substack password
+- `EMAIL`: Your Substack email address
+- `PASSWORD`: Your Substack password
+- `PUBLICATION_URL`: Your publication URL (e.g., https://your-publication.substack.com)
 
-### Rate Limiting
+### Authentication Options
 
-The library automatically handles Substack's rate limiting. If you encounter rate limit errors, the library will wait and retry automatically.
+You can authenticate in two ways:
+
+1. **Email/Password**: Provide email and password directly
+2. **Cookies**: Save and reuse cookies for persistent sessions
+
+```python
+# Using cookies for persistent authentication
+api = Api(cookies_path="cookies.json")
+
+# Export cookies for later use
+api.export_cookies("cookies.json")
+```
 
 ## Development
 
@@ -179,19 +223,19 @@ git clone https://github.com/TarunVedula/python-substack.git
 cd python-substack
 
 # Install dependencies
-poetry install
+pip install -e .
 
 # Install pre-commit hooks
 pre-commit install
 
 # Run tests
-poetry run pytest
+python -m pytest
 ```
 
 ### Running Tests
 
 ```bash
-poetry run pytest
+python -m pytest
 ```
 
 ### Code Quality
