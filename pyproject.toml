@@ -10,8 +10,8 @@ packages = [
 
 readme = "README.md"
 
-repository = "https://github.com/ma2za/python-substack"
-homepage = "https://github.com/ma2za/python-substack"
+repository = "https://github.com/TarunVedula/python-substack"
+homepage = "https://github.com/TarunVedula/python-substack"
 
 keywords = ["substack"]
 
