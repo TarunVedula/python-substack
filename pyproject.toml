@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "python-substack-tarun"
+name = "python-substack-tarun.1"
 version = "0.1.16"
 description = "A Python wrapper around the Substack API."
 authors = ["Tarun Vedula <tarun.vedula@gmail.com>"]
