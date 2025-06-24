@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "python-substack"
-version = "0.1.15"
+name = "python-substack-tarun"
+version = "0.1.16"
 description = "A Python wrapper around the Substack API."
-authors = ["Paolo Mazza <mazzapaolo2019@gmail.com>"]
+authors = ["Tarun Vedula <tarun.vedula@gmail.com>"]
 license = "MIT"
 packages = [
     { include = "substack" }
