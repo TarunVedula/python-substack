@@ -263,14 +263,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Thank you @Paolo Mazza for Project Inspo
 - Substack API for providing the underlying service
 
-## Support
-
-If you encounter any issues or have questions, please:
-
-1. Check the [examples](examples/) directory for usage examples
-2. Open an issue on GitHub
-3. Review the existing issues for similar problems
-
----
 
 **Note**: This library is not officially affiliated with Substack. Use at your own risk and in accordance with Substack's terms of service. 
