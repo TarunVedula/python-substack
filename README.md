@@ -260,7 +260,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- Original project by Paolo Mazza
+- Thank you @Paolo Mazza for Project Inspo
 - Substack API for providing the underlying service
 
 ## Support
